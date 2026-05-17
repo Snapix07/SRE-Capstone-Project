@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sre-capstone
+  labels:
+    app: sre-capstone
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sre-capstone
+  template:
+    metadata:
+      labels:
+        app: sre-capstone
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "5000"
+    spec:
+      containers:
+        - name: sre-capstone
+          image: ghcr.io/GITHUB_USERNAME/sre-capstone-project:latest
+          ports:
+            - containerPort: 5000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"

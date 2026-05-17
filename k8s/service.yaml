@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sre-capstone-service
+  labels:
+    app: sre-capstone
+spec:
+  selector:
+    app: sre-capstone
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer
